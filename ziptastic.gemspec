@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["cooperm@susteen.com"]
   gem.description   = %q{Ruby port of Thomas Schultz's Ziptastic API}
   gem.summary       = %q{Ruby port of Thomas Schultz's Ziptastic API}
-  gem.homepage      = "TO DO"
+  gem.homepage      = "https://github.com/coopermaruyama/ziptastic"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
