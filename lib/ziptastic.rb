@@ -1,29 +1,33 @@
-require "sqlite3"
-
+require "pg"
+require "net/http"
 module Ziptastic
   class NotZipCode < StandardError; end
   
-  DATABASE_PATH = File.expand_path(File.dirname(__FILE__) + "/ziptastic/data/zipcodes.db")  
-  ZIP_DATABASE = SQLite3::Database.open(DATABASE_PATH, :readonly => true, :results_as_hash => true)
+  
   
   def self.search(zip_code)
-    search_results = []
     
-    search_results = search_for_zip_code(zip_code).collect do |row|
-      {:city => row['city'], :state => row['state'], :country => row['country']}
-    end
+    search_results = search_for_zip_code(zip_code) 
         
     search_results
   end
   
   private
   def self.search_for_zip_code(zip_code)
+    http = 'http://zip.elevenbasetwo.com/v2/US/' + zip_code
     validate_zip_code(zip_code)
-    ZIP_DATABASE.execute('select City, State, Country from zipcodes where ZipCode=?', zip_code)
+    uri = URI.parse(http)
+    res = Net::HTTP.get_response(uri)
+    result = MultiJson.load(res.body)
+    if result == {}
+      false
+    else
+      result
+    end  
   end
   
   def self.validate_zip_code(zip_code)
-    raise NotZipCode, "#{zip_code} is not a zip code!" if zip_code =~ /\D/
+    raise NotZipCode, "#{zip_code} is not a zip code!" unless zip_code.match /\b[0-9]{5}(?:-[0-9]{4})?\b/
   end
 end
 require "ziptastic/app"

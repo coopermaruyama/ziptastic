@@ -9,17 +9,17 @@ describe Ziptastic do
         end
       
         it "each result should have city, state, and country" do
-          meadville = Ziptastic.search("16335")[0]
+          meadville = Ziptastic.search("16335")
           
-          meadville[:city].should eq "MEADVILLE"
-          meadville[:state].should eq "PA"
-          meadville[:country].should eq "US"
+          meadville['city'].should eq "Meadville"
+          meadville['state'].should eq "Pennsylvania"
+          meadville['country'].should eq "US"
         end
       end
       
       context "no result" do
         it "should return false" do
-          Ziptastic.search("8675309").should eq []
+          Ziptastic.search("00123").should eq false
         end
       end
     end
